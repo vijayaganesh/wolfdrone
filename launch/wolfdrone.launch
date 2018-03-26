@@ -1,0 +1,3 @@
+<launch>
+	<node name="Mission" pkg="mission" type="mission.py" respawn="true" required="true"/>
+</launch>
