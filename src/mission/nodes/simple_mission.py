@@ -7,7 +7,7 @@ Created on Thu Mar 29 14:55:35 2018
 """
 
 import rospy
-from mission import Mission
+from base_mission import Mission
 from mission.lib.vehicle import Vehicle
 from mission.utils.utilities.Utils import elliptical_wp,compute_distance, convert_global2local
 from geometry_msgs.msg import PoseStamped
@@ -25,7 +25,7 @@ class Simple_Mission(Mission):
     
   def startup(self):
     l = rospy.get_param("major_axis")
-    w = rospy.get_param("minior_axis")
+    w = rospy.get_param("minor_axis")
     x0 = rospy.get_param("x_center")
     y0 = rospy.get_param("y_center")
     alt = rospy.get_param("alt")
