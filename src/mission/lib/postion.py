@@ -36,10 +36,7 @@ class Positions:
     
     # Subscriber to process the velocity
     rospy.Subscriber("/mavros/local_position/velocity",TwistStamped,self.process_velocity)
-    
-    
-    
-    
+
   def process_position(self,pose):
     self.position = pose.pose.position
     self.orientation = pose.pose.orientation
