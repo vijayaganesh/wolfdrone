@@ -9,7 +9,7 @@ Created on Sat Mar 24 23:42:56 2018
 import rospy
 
 from geometry_msgs.msg import PoseStamped,TwistStamped
-
+from mavros_msgs.msg import State
 from mavros.srv import StreamRate, StreamRateRequest
 
 class Positions:
@@ -21,8 +21,8 @@ class Positions:
     """
     TODO: update self.position and self.orientation to home pose
     """
-    self.position = None
-    self.orientation = None
+    self.pose.pose.position = None
+    self.pose.pose.orientation = None
     
     
     # Setting the Stream rate fast enough to make control actions.
@@ -34,12 +34,17 @@ class Positions:
     # Subscriber to process the position
     rospy.Subscriber("/mavros/local_position/local",PoseStamped,self.process_position)
     
+    # Subscriber to process the state
+    rospy.Subscriber("/mavros/state",State,self.process_state)
+    
     # Subscriber to process the velocity
     rospy.Subscriber("/mavros/local_position/velocity",TwistStamped,self.process_velocity)
+    
+  def process_state(self,state):
+    self.state = state
 
   def process_position(self,pose):
-    self.position = pose.pose.position
-    self.orientation = pose.pose.orientation
+    self.pose = pose
   
   
   def process_velocity(self,velocity):
