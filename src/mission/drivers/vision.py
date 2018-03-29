@@ -13,3 +13,6 @@ class ImageProcessor:
         2. Homogeneous Transformation
         3. Perspective Transformation
         4. Run SSD code to detect the drone
+  """
+  def __init__(self):
+    pass
