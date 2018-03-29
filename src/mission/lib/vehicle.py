@@ -24,6 +24,15 @@ class Vehicle(object,Positions):
   def __init__(self):
     Positions.__init__(self)
     self.panic = False #Panic variable as failsafe
+    
+#   The following parameters will be sent using rosparam from roslaunch
+    self.home_lat = None
+    self.home_lon = None
+    self.drop_lat = None
+    self.drop_lon = None
+    self.land_lat = None
+    self.land_lon = None
+    
     self.pass_prearm = True #TODO Alter this parameter after adding the codebase for prearm check
     self.setpoint_publisher = rospy.Publisher("/mavros/setpoint_position/local_position", PoseStamped, queue_size=10)
     self.setvel_publisher = rospy.Publisher("/mavros/setpoint_velocity/cmd_vel", TwistStamped, queue_size = 10)
