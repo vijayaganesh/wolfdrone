@@ -13,6 +13,10 @@ class Mission(ABC):
   def startup(self):
     pass
   
+  @abstractmethod  
+  def mission(self):
+    pass
+  
   @abstractmethod
   def run(self):
     pass
