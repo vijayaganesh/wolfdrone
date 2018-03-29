@@ -10,7 +10,7 @@ import rospy
 
 from geometry_msgs.msg import PoseStamped, TwistStamped,Vector3Stamped
 
-from mavros.srv import CommandBool, SetMode
+from mavros.srv import CommandBool, SetMode, CommandTOL
 
 from mission.lib.position import Positions
 
@@ -44,6 +44,15 @@ class Vehicle(object,Positions):
     num = 0 if mode == 'OFFBOARD' else 1
     command_service(num,mode)
     
+  def land(self,land_lat,land_lon):
+    rospy.wait_for_service()
+    land_service = rospy.ServiceProxy('/mavros/cmd/land',CommandTOL)
+    land_service(0,0,land_lat,land_lon,0)
+    prev_vel = self.velocity.z
+    curr_vel = self.velocity.z
+    rate = rospy.Rate(10)
+    while not (abs(prev_vel) < 0.01 and abs(curr_vel) < 0.01):
+      rate.sleep()
     
   def setpoint_pose(self,set_pose):    
     self.setpoint_publisher.publish(set_pose)
