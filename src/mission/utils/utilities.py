@@ -33,10 +33,10 @@ class Utils:
           wp_list.append((x0+i,y+y0+dy,search_altitude))
           wp_list.append((x0+i,-y+y0+dy,search_altitude))
       wp_list.append((x0+l,y0,search_altitude))   
-      return wp_list
+      return wp_list.reverse()
   
   @staticmethod
-  def compute_Distance(pose_a,pose_b):
+  def compute_distance(pose_a,pose_b):
     a_x = pose_a.pose.position.x
     a_y = pose_a.pose.position.y
     a_z = pose_a.pose.position.z
@@ -46,7 +46,7 @@ class Utils:
     return ((a_x - b_x) ** 2 + (a_y - b_y) ** 2 + (a_z - b_z) ** 2) ** 0.5 
     
   @staticmethod
-  def compute_global_Distance(a_lat,a_long,b_lat,b_long):
+  def compute_global_distance(a_lat,a_long,b_lat,b_long):
       a_lat = radians(a_lat)
       a_long = radians(a_long)
       b_lat = radians(b_lat)
@@ -60,8 +60,8 @@ class Utils:
   
   @staticmethod
   def convert_global2local(self,a_lat,a_lon,b_lat,b_lon):
-    x = Utils.compute_global_Distance(a_lat,b_lon,a_lat,a_lon)
-    y = Utils.compute_global_Distance(b_lat,a_lon,a_lat,a_lon)
+    x = Utils.compute_global_distance(a_lat,b_lon,a_lat,a_lon)
+    y = Utils.compute_global_distance(b_lat,a_lon,a_lat,a_lon)
     if(b_lat < a_lat):        
         y = -y
     if(b_lon < a_lon):
