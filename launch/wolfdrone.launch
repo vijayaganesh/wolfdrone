@@ -1,5 +1,5 @@
 <launch>
-  <node name="Simple_Mission" pkg="wolfdrone" type="simple_mission.py">
+  <node name="simple_mission" pkg="wolfdrone" type="simple_mission.py" output="screen">
     <!-- Location Parameters -->
     <rosparam param = "home_lat">32.265266</rosparam>
     <rosparam param = "home_lon">-111.2736201</rosparam>
