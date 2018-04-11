@@ -32,7 +32,7 @@ class Simple_Mission(Mission):
     self.drone.drop_lon = rospy.get_param("~drop_lon")
     self.drone.land_lat = rospy.get_param("~land_lat")
     self.drone.land_lon = rospy.get_param("~land_lon")
-    
+
   def startup(self):
     l = rospy.get_param("~major_axis")
     w = rospy.get_param("~minor_axis")
@@ -40,32 +40,35 @@ class Simple_Mission(Mission):
     y0 = rospy.get_param("~y_center")
     alt = rospy.get_param("~alt")
     grid_step = rospy.get_param("~scan_step")
-    
+
     self.wp_list = Utils.elliptical_wp(l,w,x0,y0,grid_step,alt)
     print(self.wp_list)
-    
-  
+
+
   def mission(self):
-    
+
     ### PX4 rejects the offboard control mode without few setpoint commands already.
     ### So adding arbitrary number of waypoints before making offboard
     rate = rospy.Rate(10)
+    print(self.wp_list)
     t = self.wp_list.pop()
     pose = PoseStamped()
     pose.pose.position.x = t[0]
     pose.pose.position.y = t[1]
     pose.pose.position.z = t[2]
-    for i in range(20):
+    print(pose)
+    for i in range(10):
       self.drone.setpoint_pose(pose)
       rate.sleep()
     print("Sent Arbitrary Number of waypoints")
     self.drone.command_mode('OFFBOARD')
     self.drone.arm()
-    
-    
-    ### Waypoint Navigation code    
-    
+
+
+    ### Waypoint Navigation code
+
     while not len(self.wp_list) == 0:
+      print(Utils.compute_distance(pose,self.drone.pose))
       if abs(Utils.compute_distance(pose,self.drone.pose)) > 0.5:
           self.drone.setpoint_pose(pose)
           rate.sleep()
@@ -74,44 +77,49 @@ class Simple_Mission(Mission):
           pose.pose.position.x = t[0]
           pose.pose.position.y = t[1]
           pose.pose.position.z = t[2]
-    
+
     ### On Scanning the area, proceeding to the drop zone
     drop_pose = PoseStamped()
-    drop_local = Utils.convert_global2local(self.drone.drop_lat,self.drone.drop_lon)
+    drop_local = Utils.convert_global2local(self.drone.home_lat,self.drone.home_lon,self.drone.drop_lat,self.drone.drop_lon)
     drop_pose.pose.position.x = drop_local[0]
     drop_pose.pose.position.y = drop_local[1]
-    drop_pose.pose.position.z = 40
+    drop_pose.pose.position.z = 5
     while abs(Utils.compute_distance(drop_pose,self.drone.pose)) > 0.5:
-        self.drone.setpoiint_pose(drop_pose)
+        self.drone.setpoint_pose(drop_pose)
         rate.sleep()
     self.drone.land(self.drone.drop_lat,self.drone.drop_lon)
-    
+
     #### Once Dropped, Continue to the land location.
-    self.drone.command_mode('OFFBOARD')
     land_pose = PoseStamped()
-    land_local = Utils.convert_global2local(self.drone.land_lat,self.drone.land_lon)
+    land_local = Utils.convert_global2local(self.drone.home_lat,self.drone.home_lon,self.drone.land_lat,self.drone.land_lon)
     land_pose.pose.position.x = land_local[0]
     land_pose.pose.position.y = land_local[1]
-    land_pose.pose.position.z = 40
+    land_pose.pose.position.z = 5
+    for i in range(10):
+      self.drone.setpoint_pose(land_pose)
+      rate.sleep()
+    print("Sent Arbitrary Number of waypoints")
+    self.drone.command_mode('OFFBOARD')
     while abs(Utils.compute_distance(land_pose,self.drone.pose)) > 0.5:
-        self.drone.setpoiint_pose(land_pose)
+        self.drone.setpoint_pose(land_pose)
         rate.sleep()
     self.drone.land(self.drone.land_lat,self.drone.land_lon)
     print("Mission Complete")
-    
-  
-  
+
+
+
   def cleanup(self):
     pass
-  
-  
+
+
   def run(self):
-    
+    # type: () -> object
+
     self.startup()
     self.mission()
     self.cleanup()
-    
-     
+
+
 if __name__== '__main__':
   mission = Simple_Mission()
   mission.run()
