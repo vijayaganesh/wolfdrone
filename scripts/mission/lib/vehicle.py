@@ -22,7 +22,6 @@ class Vehicle(object,Positions):
   
   def __init__(self):
     Positions.__init__(self)
-    print(self.pose)
     self.panic = False #Panic variable as failsafe
     
 #   The following parameters will be sent using rosparam from roslaunch
@@ -34,7 +33,7 @@ class Vehicle(object,Positions):
     self.land_lon = None
     
     self.pass_prearm = True #TODO Alter this parameter after adding the codebase for prearm check
-    self.setpoint_publisher = rospy.Publisher("/mavros/setpoint_position/local_position", PoseStamped, queue_size=10)
+    self.setpoint_publisher = rospy.Publisher("/mavros/setpoint_position/local", PoseStamped, queue_size=10)
     self.setvel_publisher = rospy.Publisher("/mavros/setpoint_velocity/cmd_vel", TwistStamped, queue_size = 10)
     self.setaccel_publisher = rospy.Publisher("/mavros/setpoint_accel/accel",Vector3Stamped,queue_size=10)
   
@@ -46,13 +45,21 @@ class Vehicle(object,Positions):
     print("Mode Changed to :"+mode)
     
   def land(self,land_lat,land_lon):
-    rospy.wait_for_service()
+    rospy.wait_for_service('/mavros/cmd/land')
     land_service = rospy.ServiceProxy('/mavros/cmd/land',CommandTOL)
     land_service(0,0,land_lat,land_lon,0)
-    prev_vel = self.velocity.z
-    curr_vel = self.velocity.z
+    print("Land Initiated")
     rate = rospy.Rate(10)
-    while not (abs(prev_vel) < 0.01 and abs(curr_vel) < 0.01):
+    for i in range(5):
+      rate.sleep()
+    prev_vel = self.velocity.twist.linear.z
+    curr_vel = self.velocity.twist.linear.z
+    print((prev_vel,curr_vel))
+    while not (abs(prev_vel) < 0.05 and abs(curr_vel) < 0.05):
+      print("Waiting to Land")
+      print((prev_vel,curr_vel))
+      curr_vel = self.velocity.twist.linear.z
+      prev_vel = curr_vel
       rate.sleep()
     
   def setpoint_pose(self,set_pose):    

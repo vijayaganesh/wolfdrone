@@ -59,7 +59,7 @@ class Utils:
       return R*c*1000
   
   @staticmethod
-  def convert_global2local(self,a_lat,a_lon,b_lat,b_lon):
+  def convert_global2local(a_lat,a_lon,b_lat,b_lon):
     x = Utils.compute_global_distance(a_lat,b_lon,a_lat,a_lon)
     y = Utils.compute_global_distance(b_lat,a_lon,a_lat,a_lon)
     if(b_lat < a_lat):        

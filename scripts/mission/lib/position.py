@@ -12,6 +12,7 @@ from geometry_msgs.msg import PoseStamped,TwistStamped,Pose,Twist
 from mavros_msgs.msg import State
 from mavros_msgs.srv import StreamRate, StreamRateRequest
 
+
 class Positions:
   """
     TODO: ADD DOCS
@@ -33,7 +34,7 @@ class Positions:
     set_stream_rate(StreamRateRequest.STREAM_EXTRA1, 50, True)
     
     # Subscriber to process the position
-    rospy.Subscriber("/mavros/local_position/local",PoseStamped,self.process_position)
+    rospy.Subscriber("/mavros/local_position/pose",PoseStamped,self.process_position)
     
     # Subscriber to process the state
     rospy.Subscriber("/mavros/state",State,self.process_state)
