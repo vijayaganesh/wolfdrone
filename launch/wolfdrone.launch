@@ -9,10 +9,10 @@
     <rosparam param = "land_lon">-111.274712</rosparam>
 
     <!-- Waypoint Parameters -->
-    <rosparam param = "major_axis">5</rosparam>
-    <rosparam param = "minor_axis">1</rosparam>
+    <rosparam param = "major_axis">80</rosparam>
+    <rosparam param = "minor_axis">30</rosparam>
     <rosparam param = "x_center">5</rosparam>
-    <rosparam param = "y_center">5</rosparam>
+    <rosparam param = "y_center">80</rosparam>
     <rosparam param = "alt">5</rosparam>
     <rosparam param = "scan_step">30</rosparam>
 
@@ -29,6 +29,6 @@
 
 
   <node name="simple_tracker" pkg="wolfdrone" type="simple_tracker.py" output="screen">
-    <rosparam command = "load" file ="${find wolfdrone}/launch/params.yaml"/>
+    <rosparam command = "load" file ="$(find wolfdrone)/launch/params.yaml"/>
   </node>
 </launch>
