@@ -9,9 +9,11 @@ Created on Thu Mar 29 13:26:06 2018
 
 
 class DroneTracker(object):
+
   """
     TODO: Kalman Filter based image tracker to adjust the drone velocity on descend to land on top of the drone to be picked up.
 
 
-  """  
-  
+  """
+
+  def __init__
