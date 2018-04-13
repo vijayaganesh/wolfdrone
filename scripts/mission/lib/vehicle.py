@@ -7,9 +7,9 @@ Created on Sat Mar 24 23:34:52 2018
 
 import rospy
 
-from geometry_msgs.msg import PoseStamped, TwistStamped,Vector3Stamped
+from geometry_msgs.msg import PoseStamped, TwistStamped,Vector3Stamped, ParamValue
 
-from mavros_msgs.srv import CommandBool, SetMode, CommandTOL
+from mavros_msgs.srv import CommandBool, SetMode, CommandTOL, ParamSet
 
 from position import Positions
 
@@ -43,6 +43,11 @@ class Vehicle(object,Positions):
     num = 0 if mode == 'OFFBOARD' else 1
     command_service(num,mode)
     print("Mode Changed to :"+mode)
+    
+  def set_xy_speed(self,speed):
+    rospy.wait_for_service('/mavros/param/set')
+    speed_service = rospy.ServiceProxy('/mavros/param/set',ParamSet)
+    speed_service('MPC_XY_VEL_MAX',ParamValue(0,speed))
     
   def land(self,land_lat,land_lon):
     rospy.wait_for_service('/mavros/cmd/land')
