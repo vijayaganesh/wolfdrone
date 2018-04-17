@@ -15,12 +15,11 @@ sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/util
 sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission')
 
 import os
-from base_mission import Mission
 from vehicle import Vehicle
 from utilities import Utils
 from geometry_msgs.msg import PoseStamped
 
-class Simple_Mission(Mission):
+class Simple_Mission():
   def __init__(self):
     rospy.init_node("simple_mission",log_level=rospy.INFO)
     cwd = os.getcwd()

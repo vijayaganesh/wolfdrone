@@ -7,7 +7,9 @@ Created on Sat Mar 24 23:34:52 2018
 
 import rospy
 
-from geometry_msgs.msg import PoseStamped, TwistStamped,Vector3Stamped, ParamValue
+from geometry_msgs.msg import PoseStamped, TwistStamped,Vector3Stamped
+
+from mavros_msgs.msg import  ParamValue
 
 from mavros_msgs.srv import CommandBool, SetMode, CommandTOL, ParamSet
 
@@ -36,13 +38,20 @@ class Vehicle(object,Positions):
     self.setpoint_publisher = rospy.Publisher("/mavros/setpoint_position/local", PoseStamped, queue_size=10)
     self.setvel_publisher = rospy.Publisher("/mavros/setpoint_velocity/cmd_vel", TwistStamped, queue_size = 10)
     self.setaccel_publisher = rospy.Publisher("/mavros/setpoint_accel/accel",Vector3Stamped,queue_size=10)
+    
+  def command_offboard(self):
+    arbitrary_pose= PoseStamped()
+    arbitrary_pose.pose = self.pose.pose
+    for i in range(10):
+      self.setpoint_pose(arbitrary_pose)
+    self.command_mode()
   
   def command_mode(self,mode='OFFBOARD'):
     rospy.wait_for_service('/mavros/set_mode')
     command_service = rospy.ServiceProxy('/mavros/set_mode',SetMode)
     num = 0 if mode == 'OFFBOARD' else 1
     command_service(num,mode)
-    print("Mode Changed to :"+mode)
+    print ("Mode Changed :"+mode)
     
   def set_xy_speed(self,speed):
     rospy.wait_for_service('/mavros/param/set')
