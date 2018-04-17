@@ -36,6 +36,12 @@ class Utils:
     return wp_list
   
   @staticmethod
+  def single_wp():
+    wp_list = list()
+    wp_list.append((-5,80,5))
+    return wp_list
+  
+  @staticmethod
   def compute_distance(pose_a,pose_b):
     a_x = pose_a.pose.position.x
     a_y = pose_a.pose.position.y

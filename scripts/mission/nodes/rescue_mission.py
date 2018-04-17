@@ -20,7 +20,7 @@ from wolfdrone.msg import TrackStamped
 
 DEFAULT_CONTROL_LOOP_RATE = 10
 
-class Simple_Mission():
+class Rescue_Mission():
   def __init__(self,drone):
     rospy.init_node("rescue_mission",log_level=rospy.INFO)
     control_loop_rate = rospy.get_param("~control_loop_rate", DEFAULT_CONTROL_LOOP_RATE)
@@ -31,6 +31,7 @@ class Simple_Mission():
     self.curr_controller.enter()
 
   def switch_state(self,new_controller):
+    print("Here")
     rospy.loginfo("CONTROLLER TRANSITION: %s --> %s", self.curr_controller.NAME, new_controller.NAME)
     if self.curr_controller is not None:
       self.curr_controller.exit()
@@ -55,5 +56,5 @@ class Simple_Mission():
 
 if __name__== '__main__':
   drone = Vehicle()
-  mission = Simple_Mission(drone)
+  mission = Rescue_Mission(drone)
   mission.run()

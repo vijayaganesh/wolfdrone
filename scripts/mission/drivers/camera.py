@@ -9,9 +9,10 @@ import cv2
 import numpy as np
 import rospy
 from sensor_msgs.msg import Image
-from positions import Positions
+from position import Positions
 from tf.transformations import euler_from_quaternion, euler_matrix
 
+DEFAULT_CAMERA_MATRIX = [[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0]]
 
 class Camera(object,Positions):
 
@@ -22,7 +23,7 @@ class Camera(object,Positions):
         self.frame = None
         self.raw_image = None
         self.processed_image = None
-        self.P = np.matrix(rospy.get_param("~camera_matrix"))
+        self.P = np.matrix(rospy.get_param("~camera_matrix",DEFAULT_CAMERA_MATRIX))
         
     def back_project(self, u, v):
         """

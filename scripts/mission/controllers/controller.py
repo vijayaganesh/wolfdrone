@@ -11,8 +11,8 @@ class Controller(object):
     Encapsulates the control logic for each stage of flight
     within its own controller class.
     """
-    def __init__(self, commander, vehicle):
-        self.commander = commander
+    def __init__(self, mission, vehicle):
+        self.mission = mission
         self.drone = vehicle
 
     def enter(self):

@@ -42,8 +42,10 @@ class Vehicle(object,Positions):
   def command_offboard(self):
     arbitrary_pose= PoseStamped()
     arbitrary_pose.pose = self.pose.pose
+    temp_rate = rospy.Rate(10)
     for i in range(10):
       self.setpoint_pose(arbitrary_pose)
+      temp_rate.sleep()
     self.command_mode()
   
   def command_mode(self,mode='OFFBOARD'):
