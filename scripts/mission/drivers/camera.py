@@ -12,7 +12,9 @@ from sensor_msgs.msg import Image
 from position import Positions
 from tf.transformations import euler_from_quaternion, euler_matrix
 
-DEFAULT_CAMERA_MATRIX = [[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0]]
+DEFAULT_CAMERA_MATRIX = [[476.70143780997665, 0.0, 400.5, 0],[0.0, 476.70143780997665, 400.5, 0],[0, 0, 1, 0]]
+
+
 
 class Camera(object,Positions):
 
@@ -24,6 +26,7 @@ class Camera(object,Positions):
         self.raw_image = None
         self.processed_image = None
         self.P = np.matrix(rospy.get_param("~camera_matrix",DEFAULT_CAMERA_MATRIX))
+        self.P[1,1] = -self.P[1,1]
         
     def back_project(self, u, v):
         """
@@ -39,7 +42,7 @@ class Camera(object,Positions):
 
         # Recover 3D point from ray, using the vehicle's altitude to estimate
         # the point's depth in the scene
-        d = self.pose.pose.postion.z
+        d = self.pose.pose.position.z
         P_c = P_c / P_c[2] * d
         p = self.pose.pose.position
         c = np.matrix((p.x, p.y, p.z)).T
@@ -50,7 +53,6 @@ class Camera(object,Positions):
         # Compute rotation matrix, applying rigid body rotations around body axes,
         # in yaw-pitch-roll order, to compute the camera's pose in world coordinates
         R = np.matrix(euler_matrix(yaw, pitch, -roll, axes="rzxy"))[:3,:3]
-
         # Convert from left-handed to right-handed coordinate system
         # (assuming that the camera points down, such that positive z is down)
         L = np.diag([1, 1, -1])
@@ -58,7 +60,6 @@ class Camera(object,Positions):
         # Rotate and translate the point from left-handed camera coordinates
         # to right-handed world coordinates
         P_w = (R * L * P_c) + c
-
         return P_w    
     
     
