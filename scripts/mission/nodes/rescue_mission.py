@@ -18,13 +18,13 @@ from search import Search_Controller
 from vehicle import Vehicle
 from wolfdrone.msg import TrackStamped
 
-DEFAULT_CONTROL_LOOP_RATE = 10
+DEFAULT_CONTROL_LOOP_RATE = 100
 
 class Rescue_Mission():
   def __init__(self,drone):
     rospy.init_node("rescue_mission",log_level=rospy.INFO)
     control_loop_rate = rospy.get_param("~control_loop_rate", DEFAULT_CONTROL_LOOP_RATE)
-    rospy.Subscriber("/tracker/track", TrackStamped, self.handle_track_message)
+    rospy.Subscriber("/wolfdrone/drone_tracker", TrackStamped, self.handle_track_message)
     self.control_loop_rate = rospy.Rate(control_loop_rate)
     self.drone = drone
     self.curr_controller = Search_Controller(self,self.drone)
@@ -35,7 +35,7 @@ class Rescue_Mission():
     rospy.loginfo("CONTROLLER TRANSITION: %s --> %s", self.curr_controller.NAME, new_controller.NAME)
     if self.curr_controller is not None:
       self.curr_controller.exit()
-    self.curr_controller = new_controller(self,self.drone)
+    self.curr_controller = new_controller
     self.curr_controller.enter()
     
   def handle_track_message(self, msg):
