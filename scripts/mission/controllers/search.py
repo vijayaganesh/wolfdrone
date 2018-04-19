@@ -14,7 +14,7 @@ from controller import Controller
 from approach import Approach_Controller
 
 # Maximum Search speed, in m/s
-DEFAULT_MAX_SPEED_XY = 18
+DEFAULT_MAX_SPEED_XY = 5
 
 
 
@@ -29,8 +29,9 @@ class Search_Controller(Controller):
     alt = rospy.get_param("~alt")
     grid_step = rospy.get_param("~scan_step")
     self.search_speed = rospy.get_param("~search_speed",DEFAULT_MAX_SPEED_XY)
-  #  self.wp_list = Utils.elliptical_wp(l,w,x0,y0,grid_step,alt)
+#    self.wp_list = Utils.elliptical_wp(l,w,x0,y0,grid_step,alt)
     self.wp_list = Utils.single_wp()
+    self.track_counter = 0
   
   def enter(self):
     self.drone.set_xy_speed(self.search_speed)
@@ -42,15 +43,15 @@ class Search_Controller(Controller):
     pose.pose.position.x = curr_sp[0]
     pose.pose.position.y = curr_sp[1]
     pose.pose.position.z = curr_sp[2]
-    self.track_counter = 0
-    self.curr_sp = pose    
+    self.curr_sp = pose
     
     
   def handle_track_message(self,msg):
-    self.tracking = msg.tracking.data
+    self.tracking = msg.track.tracking.data
     if self.tracking:
       self.track_counter += 1
     if self.track_counter > 5:
+      print("Changing to approach Mode")
       self.mission.switch_state(Approach_Controller(self.mission,self.drone))
     
     
@@ -63,6 +64,6 @@ class Search_Controller(Controller):
           self.curr_sp.pose.position.x = curr_sp[0]
           self.curr_sp.pose.position.y = curr_sp[1]
           self.curr_sp.pose.position.z = curr_sp[2]
-        else:
-          self.mission.switch_state(Approach_Controller(self.mission,self.drone))
+#        else:
+#          self.mission.switch_state(Search_Controller(self.mission,self.drone))
     
