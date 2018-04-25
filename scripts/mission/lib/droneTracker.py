@@ -34,44 +34,47 @@ class DroneTracker(Positions):
   def run(self):
     now = time.time()
     
-    dt = now - self.last_frame_time if self.last_frame_time else 0
-    self.last_frame_time = now    
-    
+#    dt = now - self.last_frame_time if self.last_frame_time else 0
+#    self.last_frame_time = now
     frame = self.cam.get_frame()
     if frame is not None:
       bp_points = self.detect_target(frame)
-      see_now = bp_points is not None
-      see_previous = now - self.last_seen_time < 2
-      
-      if see_now :
-        self.last_seen_time = now
-        
-      if see_now and not see_previous and not self.tracking:
-        x, y, z = bp_points
-        self.initialize_kalman(x=x, y=y, z=z)
-      
-     # Time update
-      if self.tracking or (see_now and see_previous):
-        self.tracker.predict(dt=dt)
-
-      # Measurement update
-      if see_now and (see_previous or self.tracking):
-        self.tracker.update(bp_points)
-          
-      position = self.tracker.x[[0, 2, 4], 0].T.tolist()[0]
-      velocity = self.tracker.x[[1, 3, 5], 0].T.tolist()[0]
-      
-      # Determine whether we are certain about the target position
-      certain = (self.tracker.P < 2).all()
-
-      if certain and not self.tracking:
-        rospy.loginfo("Found target at (%6.4f, %6.4f, %6.4f)", *position)
-      elif not certain and self.tracking:
-        rospy.loginfo("Lost target")
-
-      self.tracking = certain
-
-      self.publish_track(position, velocity)
+#      see_now = bp_points is not None
+#      see_previous = now - self.last_seen_time < 2
+#      
+#      if see_now :
+#        self.last_seen_time = now
+#        
+#      if see_now and not see_previous and not self.tracking:
+#        x, y, z = bp_points
+#        self.initialize_kalman(x=x, y=y, z=z)
+#      
+#     # Time update
+#      if self.tracking or (see_now and see_previous):
+#        self.tracker.predict()
+#
+#      # Measurement update
+#      if see_now and (see_previous or self.tracking):
+#        self.tracker.update(bp_points)
+#          
+#      pos = self.tracker.x[[0, 2, 4], 0].T.tolist()[0]
+##      vel = self.tracker.x[[1, 3, 5], 0].T.tolist()[0]
+#      print(pos)
+#      # Determine whether we are certain about the target position
+#      certain = (self.tracker.P < 2).all()
+#
+#      if certain and not self.tracking:
+#        rospy.loginfo("Found target at (%6.4f, %6.4f, %6.4f)", *pos)
+#      elif not certain and self.tracking:
+#        rospy.loginfo("Lost target")
+#
+#      self.tracking = certain
+      if bp_points is not None:
+        self.tracking = True
+        x,y = bp_points
+        position = x,y,0
+        velocity = 0,0,0
+        self.publish_track(position, velocity)
       
     
   def publish_track(self, position, velocity):
@@ -140,17 +143,16 @@ class DroneTracker(Positions):
     hsv_img = cv2.cvtColor(frame,cv2.COLOR_RGB2HSV)
     masked = cv2.inRange(hsv_img,np.array([110,50,50]),np.array([130,255,255]))
     img,contours,hierarchy = cv2.findContours(masked,cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    
+    cv2.imshow('frame',frame)
     if contours is None or len(contours) == 0 : return
-      
+    u,v = 0,0
     for c in contours:
       x,y,w,h = cv2.boundingRect(c)
-      if(w<25 or h<25):
+      if(w<15 or h<15):
         continue
       u,v = (2 * x + w)/2 , (2 * y + h)/2
       cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),5)
-      cv2.imshow('frame',frame)
-      return self.cam.back_project(u,v)
+    return u,v
     
     
   

@@ -8,13 +8,13 @@ Created on Thu Mar 29 14:55:35 2018
 
 import rospy
 from utilities import Utils
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped,TwistStamped
 
 from controller import Controller
 from approach import Approach_Controller
 
 # Maximum Search speed, in m/s
-DEFAULT_MAX_SPEED_XY = 5
+DEFAULT_MAX_SPEED_XY = 2
 
 
 
@@ -32,6 +32,7 @@ class Search_Controller(Controller):
 #    self.wp_list = Utils.elliptical_wp(l,w,x0,y0,grid_step,alt)
     self.wp_list = Utils.single_wp()
     self.track_counter = 0
+    self.tracking = False
   
   def enter(self):
     self.drone.set_xy_speed(self.search_speed)
@@ -48,14 +49,17 @@ class Search_Controller(Controller):
     
   def handle_track_message(self,msg):
     self.tracking = msg.track.tracking.data
+    twist = TwistStamped()
     if self.tracking:
       self.track_counter += 1
-    if self.track_counter > 5:
+      self.drone.setpoint_vel(TwistStamped())
+    if self.track_counter > 20:
       print("Changing to approach Mode")
       self.mission.switch_state(Approach_Controller(self.mission,self.drone))
     
     
   def run(self):
+    if not self.tracking:
       if abs(Utils.compute_distance(self.curr_sp,self.drone.pose)) > 0.5:
           self.drone.setpoint_pose(self.curr_sp)
       else:
@@ -65,5 +69,7 @@ class Search_Controller(Controller):
           self.curr_sp.pose.position.y = curr_sp[1]
           self.curr_sp.pose.position.z = curr_sp[2]
 #        else:
+    else:
+      self.drone.setpoint_vel(TwistStamped())
 #          self.mission.switch_state(Search_Controller(self.mission,self.drone))
     

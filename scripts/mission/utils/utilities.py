@@ -38,7 +38,7 @@ class Utils:
   @staticmethod
   def single_wp():
     wp_list = list()
-    wp_list.append((-5,80,5))
+    wp_list.append((-5,80,3))
     return wp_list
   
   @staticmethod
