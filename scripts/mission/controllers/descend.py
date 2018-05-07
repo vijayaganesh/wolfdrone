@@ -30,12 +30,16 @@ class Descend_Controller(Controller):
     self.prev_error_x, self.prev_error_y = 0 , 0
     self.cumm_error_x, self.cumm_error_y = 0 , 0
     self.switch_count = 0
+    self.curr_altitude = self.drone.pose.pose.position.z    
+    self.vel_twist = None
+    self.damping_factor = 0
+    
     
   def enter(self):
     rospy.loginfo("Entered Descend Mode")
     self.vel_twist = None
     self.damping_factor = 0
-    self.curr_altitude = self.drone.pose.pose.position.z
+    
     
     
   def handle_track_message(self,msg):
@@ -96,7 +100,7 @@ class Descend_Controller(Controller):
     self.cumm_error_y = max(50 , self.cumm_error_y + error_x)
   
   def run(self):
-    if self.curr_altitude > 0.5:
+    if self.curr_altitude > 0.4:
       if self.vel_twist is not None:
         self.drone.setpoint_vel(self.vel_twist)
     else:

@@ -22,6 +22,9 @@ class Drop_Controller(Controller):
     
   def enter(self):
     self.drone.set_xy_speed(12)
+    rospy.loginfo("Entering Drop Mode")
+    self.drone.command_offboard()
+    self.drone.arm()
     self.home_lat = rospy.get_param("~home_lat")
     self.home_lon = rospy.get_param("~home_lon")
     self.land_lat = rospy.get_param("~land_lat")
