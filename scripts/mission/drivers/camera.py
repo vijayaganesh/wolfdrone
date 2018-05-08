@@ -91,7 +91,7 @@ class SimCam(Camera):
 class RealCam(Camera):
     def __init__(self):
         super(RealCam,self).__init__()
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture("/dev/video1")
 
     def get_frame(self):
         self.raw_image = self.cap.read()

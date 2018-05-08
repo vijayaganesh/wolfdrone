@@ -15,7 +15,7 @@ class TrackerNode:
     def __init__(self):
 
         rospy.init_node('Simple_Tracker', anonymous=True)
-        tracker = DroneTracker(use_sim = True)
+        tracker = DroneTracker(use_sim = False)
         while not rospy.is_shutdown():
           tracker.run()
         
