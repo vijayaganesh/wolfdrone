@@ -7,12 +7,12 @@ Created on Tue Apr 17 03:21:02 2018
 """
 
 import rospy,sys
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/lib')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/drivers')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/nodes')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/controllers')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/utils')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/lib')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/drivers')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/nodes')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/controllers')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/utils')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission')
 
 from search import Search_Controller
 from vehicle import Vehicle

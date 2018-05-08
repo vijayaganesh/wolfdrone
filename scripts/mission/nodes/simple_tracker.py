@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 import rospy, sys
 
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/lib')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/drivers')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/nodes')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/controller')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission/utils')
-sys.path.append('/home/vijayaganesh/catkin_ws/src/wolfdrone/scripts/mission')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/lib')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/drivers')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/nodes')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/controller')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission/utils')
+sys.path.append('/home/ubuntu/catkin_ws/src/wolfdrone/scripts/mission')
 
 from droneTracker import DroneTracker
 
