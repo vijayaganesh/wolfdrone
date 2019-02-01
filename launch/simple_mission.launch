@@ -1,0 +1,30 @@
+
+<launch>
+  <node name="rescue_mission" pkg="wolfdrone" type="simple_mission.py" output="screen">
+    <!-- Location Parameters -->
+    <rosparam param = "home_lat">32.265266</rosparam>
+    <rosparam param = "home_lon">-111.2736201</rosparam>
+    <rosparam param = "drop_lat">32.265024</rosparam>
+    <rosparam param = "drop_lon">-111.272536</rosparam>
+    <rosparam param = "land_lat">32.265503</rosparam>
+    <rosparam param = "land_lon">-111.274712</rosparam>
+
+    <!-- Waypoint Parameters -->
+    <rosparam param = "major_axis">40</rosparam>
+    <rosparam param = "minor_axis">15</rosparam>
+    <rosparam param = "x_center">5</rosparam>
+    <rosparam param = "y_center">80</rosparam>
+    <rosparam param = "alt">5</rosparam>
+    <rosparam param = "scan_step">15</rosparam>
+
+    <!-- After Playing Around, Bring back to these original Values 
+    <rosparam param = "major_axis">80</rosparam>
+    <rosparam param = "minor_axis">30</rosparam>
+    <rosparam param = "x_center">5</rosparam>
+    <rosparam param = "y_center">80</rosparam>
+    <rosparam param = "alt">5</rosparam>
+    <rosparam param = "scan_step">30</rosparam>
+    -->
+      
+  </node>
+</launch>
